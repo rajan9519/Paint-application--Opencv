@@ -9,7 +9,7 @@ def nothing(x):
 cap = cv2.VideoCapture(0)
 _, frame = cap.read()
 
-# flipping frame to write properly
+# flipping frame to write properly(elemenate mirror effect)
 frame = cv2.flip(frame, 1)
 cv2.namedWindow('image')
 
@@ -39,7 +39,7 @@ while(True):
     _, frame = cap.read()
     frame = cv2.flip(frame,1)
 
-    #convert bgr to hsv
+    #convert bgr(rgb) to hsv
     hsv = cv2.cvtColor(frame,cv2.COLOR_BGR2HSV)
 
     # define range of blue color in hsv
@@ -48,7 +48,7 @@ while(True):
 
     # threshold hsv image to get only blue color
     mask = cv2.inRange(hsv,lower_range,uper_range)
-
+    
     # finding contours
     image,contour,heirarchy = cv2.findContours(mask,cv2.RETR_TREE,cv2.CHAIN_APPROX_SIMPLE)
     frame = cv2.drawContours(frame,contour,-1,(255,0,0),3)
@@ -65,6 +65,7 @@ while(True):
 
     # adding codition for changing color of brush and using eraser
     if cy<row/5 and cy>=0:
+        # this condition will handle the case when centroid reaches erage block
         if cx>4*col/5 and cx <= col:
             # getting a window to do drawing stuff
             img = np.zeros([row, col, 3], frame.dtype)
@@ -84,7 +85,7 @@ while(True):
             a, b, c = 100,150,200
 
 
-        else:
+        else: # this will give the brush same color as the of the pixel on which it points
             a = img.item(cy, cx, 0)
             b = img.item(cy, cx, 1)
             c = img.item(cy, cx, 2)
